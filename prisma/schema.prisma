@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Item {
+  id           Int       @id @default(autoincrement())
+  title        String    @db.VarChar(255)
+  price        Float?
+  description  String?   @db.Text
+  status       Status    @default(OFFSET)
+  purchaseDate DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  // owner        User         @relation(fields: [ownerId], references: [id])
+  // ownerId      Int
+  // payers       ItemPayers[]
+}
+
+enum Status {
+  PENDING
+  PAID
+  OFFSET
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  // itemsToPay ItemPayers[]
+  // items      Item[]
+}
+
+// model ItemPayers {
+//   item       Item     @relation(fields: [itemId], references: [id])
+//   itemId     Int
+//   payer      User     @relation(fields: [payerId], references: [id])
+//   payerId    Int
+//   assignedAt DateTime @default(now())
+//   assignedBy String
+
+//   @@id([itemId, payerId])
+// }

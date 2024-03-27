@@ -1,5 +1,5 @@
 import prisma from "@/prisma/db";
-import { itemPatchSchema, itemSchema } from "@/validationSchemas/items";
+import { itemPatchSchema } from "@/validationSchemas/items";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 export async function PATCH(request: NextRequest, { params }: Props) {
   const body = await request.json();
   const validation = itemPatchSchema.safeParse(body);
-
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
 
@@ -20,13 +19,14 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   if (!item)
     return NextResponse.json({ error: "Item not found" }, { status: 400 });
 
+  if (body?.ownerId) body.ownerId = parseInt(body.ownerId);
+  console.log(body);
   const updatedItem = await prisma.item.update({
     where: { id: item.id },
     data: {
       ...body,
     },
   });
-  console.log(updatedItem);
   return NextResponse.json(updatedItem, { status: 201 });
 }
 

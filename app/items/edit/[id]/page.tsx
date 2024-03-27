@@ -15,11 +15,7 @@ const editItem = async ({ params }: Props) => {
 
   if (!item) return <p className="text-destructive">Item not found</p>;
 
-  return (
-    <div>
-      <ItemForm item={item} />
-    </div>
-  );
+  return <ItemForm item={item} />;
 };
 
 export default editItem;

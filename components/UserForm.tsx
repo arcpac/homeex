@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { itemSchema } from "@/validationSchemas/items";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
-import SimpleMDE from "react-simplemde-editor";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import {
@@ -136,6 +134,7 @@ const UserForm = ({ user }: Props) => {
           <Button type="submit" disabled={isSubmitting}>
             {user ? "Update user" : "Register user"}
           </Button>
+          <p className="text-destructive">{error}</p>
         </form>
       </Form>
     </div>

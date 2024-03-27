@@ -1,4 +1,4 @@
-import { Item } from "@prisma/client";
+import { Item, User } from "@prisma/client";
 import React from "react";
 import { Brain } from "lucide-react";
 
@@ -15,56 +15,67 @@ import Link from "next/link";
 import ItemStatusBadge from "@/components/ui/ItemStatusBadge";
 import ReactMarkDown from "react-markdown";
 import DeleteButton from "./DeleteButton";
+import AssignItem from "@/components/AssignItem";
 interface Props {
   item: Item;
+  users: User[];
 }
 
-const ItemDetail = ({ item }: Props) => {
+const ItemDetail = ({ item, users }: Props) => {
   return (
-    <div className="lg:grid lg:grid-cols-5 justify-center">
+    <div className="lg:grid lg:grid-cols-4">
       <Card className="mx-4 mb-4 lg:col-span-3 lg: mr-4">
         <CardHeader>
-          <div className="flex justify-between">
-            <CardTitle>{item.title}</CardTitle>
+          <div className="flex justify-between mb-3">
             <ItemStatusBadge status={item.status} />
           </div>
+          <CardTitle>{item.title}</CardTitle>
+          <CardContent className="prose dark:prose-invert">
+            <ReactMarkDown>{item.description}</ReactMarkDown>
+          </CardContent>
         </CardHeader>
         <CardContent>
-          <p>{item.purchaseDate?.toLocaleDateString()}</p>
-          <CardDescription className="prose">
-            <ReactMarkDown>{item.description}</ReactMarkDown>
-          </CardDescription>
+          <p>
+            Created:
+            {item.createdAt.toLocaleDateString("en-US", {
+              year: "2-digit",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}
+          </p>
         </CardContent>
         <CardFooter>
-          <div className="flex-col w-full space-y-3">
-            <div className="">
-              <Link
-                href={`/items/edit/${item.id}`}
-                className={`w-full ${buttonVariants({
-                  variant: "secondary",
-                })}}`}
-              >
-                <Brain className="mr-2 h-4 w-4" /> Edit item
-              </Link>
-            </div>
-            <DeleteButton itemId={item.id} />
-          </div>
+          <p>
+            Updated:
+            {item.updatedAt.toLocaleDateString("en-US", {
+              year: "2-digit",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}
+          </p>
         </CardFooter>
       </Card>
-      <div className="col-span-2">
-        <Card className="mx-4 mb-4 lg:col-span-2 lg: mr-4">
-          <CardHeader>
-            <div className="flex justify-between">
-              <CardTitle>Total</CardTitle>
-              <ItemStatusBadge status={item.status} />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p>{item.purchaseDate?.toLocaleDateString()}</p>
-            <CardDescription>50.90</CardDescription>
-          </CardContent>
-          <CardFooter>Footer</CardFooter>
-        </Card>
+      <div className="mx-4 flex lg:flex-col lg:mx-0 gap-2">
+        <div>
+          <AssignItem item={item} users={users} />
+        </div>
+        <Link
+          href={`/items/edit/${item.id}`}
+          className={`${buttonVariants({
+            variant: "default",
+          })}`}
+        >
+          Edit Item
+        </Link>
+        <div>
+          <DeleteButton itemId={item.id} />
+        </div>
       </div>
     </div>
   );

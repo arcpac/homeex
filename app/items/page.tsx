@@ -5,6 +5,8 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import StatusFilter from "@/components/StatusFilter";
 import { Status } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import options from "../api/auth/[...nextauth]/options";
 
 interface SearchParams {
   status: Status;
@@ -12,9 +14,10 @@ interface SearchParams {
 
 const Items = async ({ searchParams }: { searchParams: SearchParams }) => {
   let where = {};
-  // const items = await prisma.item.findMany();
-  const statuses = Object.values(Status);
+  const session = await getServerSession(options);
 
+  if (!session?.user) return <p className="text-destructive">Access denied</p>;
+  const statuses = Object.values(Status);
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
@@ -27,7 +30,6 @@ const Items = async ({ searchParams }: { searchParams: SearchParams }) => {
   const items = await prisma.item.findMany({
     where,
   });
-  console.log(where);
 
   return (
     <div className="p-5">

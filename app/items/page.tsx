@@ -27,6 +27,7 @@ const Items = async ({ searchParams }: { searchParams: SearchParams }) => {
       status,
     };
   }
+
   const items = await prisma.item.findMany({
     where,
   });

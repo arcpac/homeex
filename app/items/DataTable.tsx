@@ -34,7 +34,7 @@ const DataTable = ({ items }: Props) => {
                 <Link href="">Price</Link>
               </TableHead>
               <TableHead>
-                <Link href="">Description</Link>
+                <Link href="">Owner</Link>
               </TableHead>
               <TableHead>
                 <Link href="">Status</Link>
@@ -58,7 +58,7 @@ const DataTable = ({ items }: Props) => {
                   <Link href={`/items/${item.id}`}>{item.title}</Link>
                 </TableCell>
                 <TableCell>{item.price}</TableCell>
-                <TableCell>{item.description}</TableCell>
+                <TableCell>{item.ownerId || "no owner"}</TableCell>
                 <TableCell>
                   <ItemStatusBadge status={item.status} />
                 </TableCell>

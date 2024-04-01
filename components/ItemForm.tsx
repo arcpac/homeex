@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { itemSchema } from "@/validationSchemas/items";
 import { z } from "zod";
@@ -10,7 +10,7 @@ import SimpleMDEditor from "react-simplemde-editor";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import {
-  Select,
+  Select as UISelect,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -24,30 +24,57 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { Item } from "@prisma/client";
+import { Item, User } from "@prisma/client";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 type ItemFormData = z.infer<typeof itemSchema>;
-
+interface DefaultOption {
+  value: number; // Assuming user IDs are numbers
+  label: string;
+}
 interface Props {
   item?: Item;
+  defaultOptions?: DefaultOption[];
+  users: DefaultOption[];
 }
-const ItemForm = ({ item }: Props) => {
+const ItemForm = ({ item, users, defaultOptions }: Props) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isSubmitting, setisSubmitting] = useState(false);
+  const [selected, setSelected] = useState(defaultOptions || []);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    setSelected(selected);
+    // console.log("selected: ", selected);
+  }, [selected]);
 
   const form = useForm<ItemFormData>({
     resolver: zodResolver(itemSchema),
   });
 
-  console.log("Price validation error:", form.formState.errors.price);
-
   async function onSubmit(values: z.infer<typeof itemSchema>) {
     values.purchaseDate = date;
+
+    const connect = selected.map((user) => ({
+      assignedBy: "test",
+      assignedAt: new Date(),
+      itemId: item?.id,
+      payerId: user.value,
+    }));
+
+    if (!item) {
+      values.payers = { create: connect };
+    } else {
+      values.payers = {
+        set: connect,
+      };
+    }
+
     console.log(values);
     try {
       setisSubmitting(true);
@@ -65,6 +92,11 @@ const ItemForm = ({ item }: Props) => {
       setisSubmitting(false);
     }
   }
+
+  const onSelectPayer = (selectedOptions) => {
+    setSelected(selectedOptions);
+  };
+  const animatedComponents = makeAnimated();
 
   return (
     <div className="rounded-md border w-full p-4">
@@ -92,6 +124,7 @@ const ItemForm = ({ item }: Props) => {
                 <FormField
                   control={form.control}
                   name="price"
+                  defaultValue={item?.price || 0}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price</FormLabel>
@@ -149,8 +182,20 @@ const ItemForm = ({ item }: Props) => {
                   )}
                 />
               </div>
+              <div className="flex-auto">
+                <FormLabel>Assign payers</FormLabel>
+                <Select
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  defaultValue={selected}
+                  onChange={onSelectPayer}
+                  isMulti
+                  options={users}
+                />
+              </div>
             </div>
           </div>
+
           <div className="flex w-full space-x-4">
             <FormField
               control={form.control}
@@ -159,7 +204,7 @@ const ItemForm = ({ item }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select
+                  <UISelect
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -176,7 +221,7 @@ const ItemForm = ({ item }: Props) => {
                       <SelectItem value="PAID">Paid</SelectItem>
                       <SelectItem value="OFFSET">Offset</SelectItem>
                     </SelectContent>
-                  </Select>
+                  </UISelect>
                 </FormItem>
               )}
             />

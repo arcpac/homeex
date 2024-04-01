@@ -8,16 +8,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Item } from "@prisma/client";
+import { Item, Prisma } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
-// what type of data would you like to receive
+type BlogWithOwner = Prisma.ItemGetPayload<{
+  include: { owner: true };
+}>;
+
 interface Props {
-  items: Item[]; // array of items
+  items: BlogWithOwner[]; // array of items
 }
 
 const DataTable = ({ items }: Props) => {
+  console.log(items);
   return (
     <div className="w-full mt-5">
       <div className="rounded-md sm:border">
@@ -58,7 +62,7 @@ const DataTable = ({ items }: Props) => {
                   <Link href={`/items/${item.id}`}>{item.title}</Link>
                 </TableCell>
                 <TableCell>{item.price}</TableCell>
-                <TableCell>{item.ownerId || "no owner"}</TableCell>
+                <TableCell>{item.owner.email || "no owner"}</TableCell>
                 <TableCell>
                   <ItemStatusBadge status={item.status} />
                 </TableCell>

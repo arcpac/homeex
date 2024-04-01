@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession(options);
   if (!session)
     return NextResponse.json({ error: "Not Authenticated" }, { status: 401 });
-
   const body = await request.json();
+  console.log(body);
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { id: true },
@@ -22,5 +22,6 @@ export async function POST(request: NextRequest) {
   const newItem = await prisma.item.create({
     data: { ...body },
   });
+  console.log(newItem);
   return NextResponse.json(newItem, { status: 201 });
 }

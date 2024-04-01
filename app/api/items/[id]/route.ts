@@ -20,14 +20,19 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: "Item not found" }, { status: 400 });
 
   if (body?.ownerId) body.ownerId = parseInt(body.ownerId);
-  console.log(body);
+  // console.log(body);
   const updatedItem = await prisma.item.update({
     where: { id: item.id },
     data: {
       ...body,
     },
+    include: {
+      payers: true,
+    },
   });
-  return NextResponse.json(updatedItem, { status: 201 });
+
+  console.log(updatedItem);
+  // return NextResponse.json(updatedItem, { status: 201 });
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {

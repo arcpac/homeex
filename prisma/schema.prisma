@@ -12,17 +12,17 @@ datasource db {
 }
 
 model Item {
-  id           Int       @id @default(autoincrement())
-  title        String    @db.VarChar(255)
+  id           Int          @id @default(autoincrement())
+  title        String       @db.VarChar(255)
   price        Float?
-  description  String?   @db.Text
-  status       Status    @default(OFFSET)
+  description  String?      @db.Text
+  status       Status       @default(OFFSET)
   purchaseDate DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  owner        User      @relation(fields: [ownerId], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  owner        User         @relation(fields: [ownerId], references: [id])
   ownerId      Int
-  // payers       ItemPayers[]
+  payers       ItemPayers[]
 }
 
 enum Status {
@@ -32,15 +32,15 @@ enum Status {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // itemsToPay ItemPayers[]
-  items     Item[]
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  name       String
+  role       Role         @default(USER)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  itemsToPay ItemPayers[]
+  items      Item[]
 }
 
 enum Role {
@@ -49,13 +49,13 @@ enum Role {
   VIEWER
 }
 
-// model ItemPayers {
-//   item       Item     @relation(fields: [itemId], references: [id])
-//   itemId     Int
-//   payer      User     @relation(fields: [payerId], references: [id])
-//   payerId    Int
-//   assignedAt DateTime @default(now())
-//   assignedBy String
+model ItemPayers {
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     Int
+  payer      User     @relation(fields: [payerId], references: [id])
+  payerId    Int
+  assignedAt DateTime @default(now())
+  assignedBy String
 
-//   @@id([itemId, payerId])
-// }
+  @@id([itemId, payerId])
+}

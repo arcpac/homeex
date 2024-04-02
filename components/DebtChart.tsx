@@ -17,14 +17,15 @@ interface dataProps {
 }
 
 interface dataElements {
-  name: Status;
-  total: number;
+  name: string;
+  email: string;
+  itemCount: number;
 }
-const ItemChart = ({ data }: dataProps) => {
+const DebtChart = ({ data }: dataProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Items status</CardTitle>
+        <CardTitle>Items owned by user</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
@@ -43,7 +44,7 @@ const ItemChart = ({ data }: dataProps) => {
               tickLine={false}
               axisLine={false}
             />
-            <Bar dataKey="total" fill="#60A5FA" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="itemCount" fill="#60A5FA" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
@@ -54,4 +55,4 @@ const ItemChart = ({ data }: dataProps) => {
   );
 };
 
-export default ItemChart;
+export default DebtChart;

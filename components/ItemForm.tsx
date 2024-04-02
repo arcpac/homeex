@@ -50,7 +50,7 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
 
   useEffect(() => {
     setSelected(selected);
-    // console.log("selected: ", selected);
+    console.log("selected: ", selected);
   }, [selected]);
 
   const form = useForm<ItemFormData>({
@@ -59,23 +59,11 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
 
   async function onSubmit(values: z.infer<typeof itemSchema>) {
     values.purchaseDate = date;
-
-    const connect = selected.map((user) => ({
-      assignedBy: "test",
-      assignedAt: new Date(),
-      itemId: item?.id,
-      payerId: user.value,
+    values.payers = selected.map((user) => ({
+      id: user.value,
+      name: user.label,
     }));
 
-    if (!item) {
-      values.payers = { create: connect };
-    } else {
-      values.payers = {
-        set: connect,
-      };
-    }
-
-    console.log(values);
     try {
       setisSubmitting(true);
       setError("");
@@ -87,7 +75,6 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
       setisSubmitting(false);
       router.push("/items");
     } catch (error) {
-      console.log("ERROR: ", error);
       setError("Unkown Error");
       setisSubmitting(false);
     }

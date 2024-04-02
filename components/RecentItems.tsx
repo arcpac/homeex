@@ -20,7 +20,6 @@ interface Props {
 }
 
 const RecentItems = ({ items }: Props) => {
-  console.log(items);
   return (
     <div>
       <Card>

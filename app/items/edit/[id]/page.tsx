@@ -22,10 +22,9 @@ const editItem = async ({ params }: Props) => {
     select: { name: true, id: true },
   });
 
-  console.log(item.payers);
   const defaultOptions = item.payers.map((user) => ({
-    value: user.itemId,
-    label: user.assignedBy,
+    value: user.id,
+    label: user.name,
   }));
   const transformedUsers = users.map((user) => ({
     value: user.id,

@@ -21,7 +21,6 @@ interface Props {
 }
 
 const DataTable = ({ items }: Props) => {
-  console.log(items);
   return (
     <div className="w-full mt-5">
       <div className="rounded-md sm:border">

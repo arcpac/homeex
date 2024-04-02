@@ -2,6 +2,11 @@ import prisma from "@/prisma/db";
 import { itemPatchSchema } from "@/validationSchemas/items";
 import { NextRequest, NextResponse } from "next/server";
 
+interface User {
+  id: number;
+  name: string;
+}
+
 interface Props {
   params: { id: string };
 }
@@ -20,19 +25,24 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: "Item not found" }, { status: 400 });
 
   if (body?.ownerId) body.ownerId = parseInt(body.ownerId);
-  // console.log(body);
+
+  let where;
+  where = body.payers.map((user: User) => ({
+    where: { id: user.id },
+    create: { id: user.id, name: user.name },
+  }));
+
   const updatedItem = await prisma.item.update({
     where: { id: item.id },
     data: {
       ...body,
-    },
-    include: {
-      payers: true,
+      payers: {
+        connectOrCreate: where,
+      },
     },
   });
-
   console.log(updatedItem);
-  // return NextResponse.json(updatedItem, { status: 201 });
+  return NextResponse.json(updatedItem, { status: 201 });
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {

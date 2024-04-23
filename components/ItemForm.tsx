@@ -72,20 +72,20 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
       id: user.value,
       name: user.label,
     }));
-    // try {
-    //   setisSubmitting(true);
-    //   setError("");
-    //   if (item) {
-    //     await axios.patch("/api/items/" + item.id, values);
-    //   } else {
-    //     await axios.post("/api/items", values);
-    //   }
-    //   setisSubmitting(false);
-    //   router.push("/items");
-    // } catch (error) {
-    //   setError("Unkown Error");
-    //   setisSubmitting(false);
-    // }
+    try {
+      setisSubmitting(true);
+      setError("");
+      if (item) {
+        await axios.patch("/api/items/" + item.id, values);
+      } else {
+        await axios.post("/api/items", values);
+      }
+      setisSubmitting(false);
+      router.push("/items");
+    } catch (error) {
+      setError("Unkown Error");
+      setisSubmitting(false);
+    }
   }
   const handleCheckboxChange = (event) => {
     console.log(event.target)

@@ -35,6 +35,11 @@ const ItemDetail = ({ item, users }: Props) => {
           </CardContent>
         </CardHeader>
         <CardContent>
+          {item.self ? (
+            <p>Owner included as payer</p>
+          ) : (
+            <p>Owner not included</p>
+          )}
           <p>
             Created:
             {item.createdAt.toLocaleDateString("en-US", {

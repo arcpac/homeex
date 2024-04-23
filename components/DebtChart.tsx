@@ -44,7 +44,7 @@ const DebtChart = ({ data }: dataProps) => {
               tickLine={false}
               axisLine={false}
             />
-            <Bar dataKey="itemCount" fill="#60A5FA" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="itemCount" fill="#21c55e" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

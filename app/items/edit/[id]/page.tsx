@@ -15,7 +15,6 @@ const editItem = async ({ params }: Props) => {
     },
     where: { id: parseInt(params.id) },
   });
-
   if (!item) return <p className="text-destructive">Item not found</p>;
 
   const users = await prisma.user.findMany({

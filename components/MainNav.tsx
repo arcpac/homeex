@@ -2,10 +2,9 @@ import options from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
-
+import { ModeToggle } from "./ui/toggleButton";
 const MainNav = async () => {
   const session = await getServerSession(options);
-  console.log(session);
   return (
     <div className="flex justify-between">
       <Link href="/">Dashboard</Link>
@@ -23,6 +22,7 @@ const MainNav = async () => {
           </>
         )}
       </div>
+      <ModeToggle />
     </div>
   );
 };

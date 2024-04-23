@@ -41,7 +41,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       },
     },
   });
-  console.log(updatedItem);
   return NextResponse.json(updatedItem, { status: 201 });
 }
 

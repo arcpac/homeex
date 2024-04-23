@@ -35,10 +35,6 @@ const options: NextAuthOptions = {
         return null;
       },
     }),
-    // GitHubProvider({
-    //   clientId: process.env.GITHUB_ID as string,
-    //   clientSecret: process.env.GITHUB_SECRET as string,
-    // }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -55,11 +51,13 @@ const options: NextAuthOptions = {
     },
     session({ session, token }) {
       if (session.user) {
-        const { username, role, email } = token as {
+        const { id, username, role, email } = token as {
+          id: number;
           email: string;
           username: string;
           role?: string;
         };
+        session.user.id = id;
         session.user.email = username || email;
         session.user.role = role || "USER";
       }

@@ -43,13 +43,10 @@ const ItemChart = ({ data }: dataProps) => {
               tickLine={false}
               axisLine={false}
             />
-            <Bar dataKey="total" fill="#60A5FA" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="total" fill="#21c55e" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
     </Card>
   );
 };

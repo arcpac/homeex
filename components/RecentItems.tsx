@@ -24,7 +24,7 @@ const RecentItems = ({ items }: Props) => {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Recent items</CardTitle>
+          <CardTitle>Recent Items</CardTitle>
           <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>

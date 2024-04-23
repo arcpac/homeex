@@ -24,7 +24,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   if (body?.password && body.password != "") {
     const hashedPassword = await bcrypt.hash(body.password, 10);
     body.password = hashedPassword;
-    console.log(hashedPassword);
   } else {
     delete body.password;
   }

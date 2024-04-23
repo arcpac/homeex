@@ -57,3 +57,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  background-size: cover; /* Cover the entire background */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+}

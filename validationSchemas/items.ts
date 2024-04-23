@@ -11,6 +11,10 @@ export const itemSchema = z.object({
   description: z.string().max(5000).optional(),
   purchaseDate: z.string().optional(),
   payers: z.any(),
+  self: z.boolean({
+    required_error: "isActive is required",
+    invalid_type_error: "isActive must be a boolean",
+  }),
   // payers: z.array(itemPayer),
   status: z.string().min(1, "Status").max(15),
 });

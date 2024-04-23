@@ -8,7 +8,7 @@ const ItemForm = dynamic(() => import("@/components/ItemForm"), { ssr: false });
 
 const NewItem = async () => {
   const session = await getServerSession(options);
-
+  console.log("Session", session);
   if (!session?.user) return <p className="text-destructive">Access denied</p>;
 
   const users = await prisma.user.findMany({

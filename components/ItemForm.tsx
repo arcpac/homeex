@@ -1,6 +1,13 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import React, { useEffect, useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "./ui/form";
 import { itemSchema } from "@/validationSchemas/items";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
@@ -24,12 +31,13 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { Item, User } from "@prisma/client";
+import { Item } from "@prisma/client";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type ItemFormData = z.infer<typeof itemSchema>;
 interface DefaultOption {
@@ -42,6 +50,7 @@ interface Props {
   users: DefaultOption[];
 }
 const ItemForm = ({ item, users, defaultOptions }: Props) => {
+  const [isChecked, setIsChecked] = useState(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isSubmitting, setisSubmitting] = useState(false);
   const [selected, setSelected] = useState(defaultOptions || []);
@@ -50,7 +59,6 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
 
   useEffect(() => {
     setSelected(selected);
-    console.log("selected: ", selected);
   }, [selected]);
 
   const form = useForm<ItemFormData>({
@@ -58,27 +66,31 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
   });
 
   async function onSubmit(values: z.infer<typeof itemSchema>) {
+    console.log("Values", values);
     values.purchaseDate = date;
     values.payers = selected.map((user) => ({
       id: user.value,
       name: user.label,
     }));
-
-    try {
-      setisSubmitting(true);
-      setError("");
-      if (item) {
-        await axios.patch("/api/items/" + item.id, values);
-      } else {
-        await axios.post("/api/items", values);
-      }
-      setisSubmitting(false);
-      router.push("/items");
-    } catch (error) {
-      setError("Unkown Error");
-      setisSubmitting(false);
-    }
+    // try {
+    //   setisSubmitting(true);
+    //   setError("");
+    //   if (item) {
+    //     await axios.patch("/api/items/" + item.id, values);
+    //   } else {
+    //     await axios.post("/api/items", values);
+    //   }
+    //   setisSubmitting(false);
+    //   router.push("/items");
+    // } catch (error) {
+    //   setError("Unkown Error");
+    //   setisSubmitting(false);
+    // }
   }
+  const handleCheckboxChange = (event) => {
+    console.log(event.target)
+    // setIsChecked(event.target.checked); // Update isChecked based on the checkbox state
+  };
 
   const onSelectPayer = (selectedOptions) => {
     setSelected(selectedOptions);
@@ -178,6 +190,32 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
                   onChange={onSelectPayer}
                   isMulti
                   options={users}
+                />
+              </div>
+
+              <div className="flex-auto">
+                <FormField
+                  control={form.control}
+                  defaultValue={isChecked}
+                  name="self"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                      <FormControl>
+                        <Checkbox
+                          defaultChecked
+
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Include myself</FormLabel>
+                        <FormDescription>
+                          By checking this, you are including your account as a
+                          payer in this item
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </div>
             </div>

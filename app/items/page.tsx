@@ -9,11 +9,9 @@ import { getServerSession } from "next-auth";
 import options from "../api/auth/[...nextauth]/options";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
 interface SearchParams {
@@ -47,10 +45,8 @@ const Items = async ({ searchParams }: { searchParams: SearchParams }) => {
         <div className="flex-col">
           <Card className="w-[350px]">
             <CardHeader>
-              {/* <CardTitle>No items av</CardTitle> */}
               <CardDescription>You have no items available</CardDescription>
             </CardHeader>
-            {/* <CardContent>No items available</CardContent> */}
             <CardFooter className="flex justify-between">
               <Link
                 href="/items/new"

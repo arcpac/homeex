@@ -46,8 +46,6 @@ const ItemDetail = ({ item, users }: Props) => {
               hour12: true,
             })}
           </p>
-        </CardContent>
-        <CardFooter>
           <p>
             Updated:
             {item.updatedAt.toLocaleDateString("en-US", {
@@ -59,7 +57,16 @@ const ItemDetail = ({ item, users }: Props) => {
               hour12: true,
             })}
           </p>
-        </CardFooter>
+        </CardContent>
+        <CardContent>
+          <p>Payers: </p>
+          <ul>
+            {item.payers.map((payer) => (
+              <li>{payer.name}</li>
+            ))}
+          </ul>
+        </CardContent>
+        <CardFooter></CardFooter>
       </Card>
       <div className="mx-4 flex lg:flex-col lg:mx-0 gap-2">
         <div>

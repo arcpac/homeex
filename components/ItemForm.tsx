@@ -38,6 +38,8 @@ import { format } from "date-fns";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useFormState } from "react-dom";
+import { onSubmit } from "@/lib/actions/items";
 
 type ItemFormData = z.infer<typeof itemSchema>;
 interface DefaultOption {
@@ -50,6 +52,9 @@ interface Props {
   users: DefaultOption[];
 }
 const ItemForm = ({ item, users, defaultOptions }: Props) => {
+  const [formState, submitForm] = useFormState(onSubmit, {
+    validationErrors: [],
+  });
   const [isChecked, setIsChecked] = useState(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isSubmitting, setisSubmitting] = useState(false);
@@ -65,30 +70,30 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
     resolver: zodResolver(itemSchema),
   });
 
-  async function onSubmit(values: z.infer<typeof itemSchema>) {
-    console.log("Values", values);
-    values.purchaseDate = date;
-    values.payers = selected.map((user) => ({
-      id: user.value,
-      name: user.label,
-    }));
-    try {
-      setisSubmitting(true);
-      setError("");
-      if (item) {
-        await axios.patch("/api/items/" + item.id, values);
-      } else {
-        await axios.post("/api/items", values);
-      }
-      setisSubmitting(false);
-      router.push("/items");
-    } catch (error) {
-      setError("Unkown Error");
-      setisSubmitting(false);
-    }
-  }
+  // async function onSubmit(values: z.infer<typeof itemSchema>) {
+  //   console.log("Values", values);
+  //   values.purchaseDate = date;
+  //   values.payers = selected.map((user) => ({
+  //     id: user.value,
+  //     name: user.label,
+  //   }));
+  //   try {
+  //     setisSubmitting(true);
+  //     setError("");
+  //     if (item) {
+  //       await axios.patch("/api/items/" + item.id, values);
+  //     } else {
+  //       await axios.post("/api/items", values);
+  //     }
+  //     setisSubmitting(false);
+  //     router.push("/items");
+  //   } catch (error) {
+  //     setError("Unkown Error");
+  //     setisSubmitting(false);
+  //   }
+  // }
   const handleCheckboxChange = (event) => {
-    console.log(event.target)
+    console.log(event.target);
     // setIsChecked(event.target.checked); // Update isChecked based on the checkbox state
   };
 
@@ -100,7 +105,8 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
   return (
     <div className="rounded-md border w-full p-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+        <form onSubmit={form.handleSubmit(submitForm)} className="w-full">
+        {/* <form action={submitForm} className="w-full"> */}
           <div className="">
             <div className="flex flex-col md:w-1/2">
               <div className="flex-auto">
@@ -203,7 +209,6 @@ const ItemForm = ({ item, users, defaultOptions }: Props) => {
                       <FormControl>
                         <Checkbox
                           defaultChecked
-
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
